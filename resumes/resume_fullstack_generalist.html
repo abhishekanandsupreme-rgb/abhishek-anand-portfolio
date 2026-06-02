@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume - Full-Stack Developer & Freelance Consultant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #ec4899;
+            --text-dark: #334155;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --border: #e2e8f0;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.5;
+            background-color: #fff;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        header {
+            background-color: var(--primary);
+            color: #fff;
+            padding: 40px;
+            position: relative;
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 40px;
+            right: 40px;
+            height: 4px;
+            background-color: var(--secondary);
+        }
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            color: var(--secondary);
+            font-weight: 500;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        .contact-info span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            background-color: #fff;
+        }
+        .sidebar {
+            background-color: var(--bg-light);
+            padding: 40px 30px;
+            border-right: 1px solid var(--border);
+        }
+        .main-content {
+            padding: 40px;
+        }
+        section {
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 5px;
+        }
+        .summary-text {
+            font-size: 14px;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .skills-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .skills-list li {
+            font-size: 13px;
+            background-color: #fff;
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        .experience-item {
+            margin-bottom: 20px;
+        }
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 6px;
+        }
+        .role-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .company-duration {
+            font-size: 13px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        .experience-bullets {
+            list-style-type: square;
+            margin-left: 20px;
+            font-size: 13.5px;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .education-item {
+            margin-bottom: 15px;
+        }
+        .degree {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .school {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        .projects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .project-item h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .project-item p {
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+        @media print {
+            body {
+                padding: 0;
+            }
+            .container {
+                border: none;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Full-Stack Software Engineer</h1>
+            <div class="subtitle">Full-Stack Web Engineer & Solutions Architect</div>
+            <div class="contact-info">
+                <span>ðŸ“ Delhi NCR / Remote</span>
+                <span>âœ‰ï¸ abhishekanandsupreme@gmail.com</span>
+                <span>ðŸ”— linkedin.com/in/abhishek-anand-supreme</span>
+            </div>
+        </header>
+        
+        <div class="grid">
+            <div class="sidebar">
+                <section>
+                    <h2>Expertise</h2>
+                    <ul class="skills-list">
+                        <li>Full-Stack Web Development</li>
+                        <li>HTML5, CSS3, & Tailwind CSS</li>
+                        <li>JavaScript & React.js</li>
+                        <li>TypeScript & Next.js</li>
+                        <li>Python & Odoo Customization</li>
+                        <li>Java & Spring Boot Core</li>
+                        <li>PostgreSQL & Database Design</li>
+                        <li>REST API & System Integration</li>
+                        <li>Git & CI/CD Pipelines</li>
+                        <li>Responsive UI/UX Design</li>
+                        <li>System Integration & APIs</li>
+                        <li>Git & Deployment</li>
+                    </ul>
+                </section>
+                
+                <section>
+                    <h2>Education</h2>
+                    <div class="education-item">
+                        <div class="degree">Bachelor of Technology (B.Tech)</div>
+                        <div class="school">Indian Institute of Technology (IIT ISM) Dhanbad</div>
+                        <div class="company-duration"></div>
+                    </div>
+                </section>
+            </div>
+            
+            <div class="main-content">
+                <section>
+                    <h2>Professional Summary</h2>
+                    <p class="summary-text">
+                        A highly proficient Full-Stack Software Engineer specialized in building highly responsive frontend interfaces, robust REST APIs, and scalable backend integrations. Deeply experienced in modern web frameworks (React, JavaScript/TypeScript, HTML5/CSS3, Tailwind CSS) and robust backend environments (Python, Java, Spring Boot, PostgreSQL). Passionate about writing clean, maintainable, and high-performance code that drives optimal user experience.
+                    </p>
+                </section>
+                
+                <section>
+                    <h2>Professional Experience</h2>
+                    <div class="experience-item">
+                        <div class="experience-header">
+                            <span class="role-title">Lead Web Developer & Technical Consultant</span>
+                            <span class="company-duration">June 2025 - Present</span>
+                        </div>
+                        <div style="font-size: 13px; color: var(--secondary); font-weight: 500; margin-bottom: 8px;">Freelance / Self-Employed</div>
+                        <ul class="experience-bullets">
+                            <li>Designed and launched multiple custom Odoo 19 web-portals, incorporating custom responsive frontend views using HTML5, CSS3, and JavaScript.</li>
+                            <li>Engineered multi-channel automated API data streams in Python, parsing external webhook payloads into core database structures.</li>
+                            <li>Developed reusable web components using React.js and Tailwind CSS, increasing development delivery speed by 30%.</li>
+                            <li>Designed high-fidelity telemetry dashboards and analytics reporting systems for key business stakeholders.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="experience-item">
+                        <div class="experience-header">
+                            <span class="role-title">Java & Mobile Software Engineer</span>
+                            <span class="company-duration">June 2024 - May 2025</span>
+                        </div>
+                        <div style="font-size: 13px; color: var(--secondary); font-weight: 500; margin-bottom: 8px;">Enterprise Software Solutions</div>
+                        <ul class="experience-bullets">
+                            <li>Developed reliable enterprise REST architectures utilizing Java 17, Spring Boot, and PostgreSQL.</li>
+                            <li>Built native Android applications incorporating local cache layers (SQLite/Room) and REST API consumption.</li>
+                            <li>Wrote comprehensive API specifications and technical integration guidelines, collaborating with cross-functional teams to integrate services.</li>
+                        </ul>
+                    </div>
+                </section>
+                
+                <section>
+                    <h2>Key Projects</h2>
+                    <div class="projects-list">
+                        <div class="project-item">
+                            <h4>Dynamic Web Solutions Portfolio</h4>
+                            <p>An array of full-stack web development and automation systems built with React.js, Tailwind CSS, Odoo, and Python, featuring elegant interfaces and optimized rendering.</p>
+                        </div>
+                        <div class="project-item" style="margin-top: 15px;">
+                            <h4>High-Performance API Gateway Hub</h4>
+                            <p>A secure and robust API integration gateway detailed with technical specs and interactive mock request simulators.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

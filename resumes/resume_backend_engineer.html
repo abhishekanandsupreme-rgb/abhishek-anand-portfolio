@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume - Backend Spring Boot & Microservices Engineer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #10b981;
+            --text-dark: #334155;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --border: #e2e8f0;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.5;
+            background-color: #fff;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        header {
+            background-color: var(--primary);
+            color: #fff;
+            padding: 40px;
+            position: relative;
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 40px;
+            right: 40px;
+            height: 4px;
+            background-color: var(--secondary);
+        }
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            color: var(--secondary);
+            font-weight: 500;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        .contact-info span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            background-color: #fff;
+        }
+        .sidebar {
+            background-color: var(--bg-light);
+            padding: 40px 30px;
+            border-right: 1px solid var(--border);
+        }
+        .main-content {
+            padding: 40px;
+        }
+        section {
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 5px;
+        }
+        .summary-text {
+            font-size: 14px;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .skills-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .skills-list li {
+            font-size: 13px;
+            background-color: #fff;
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        .experience-item {
+            margin-bottom: 20px;
+        }
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 6px;
+        }
+        .role-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .company-duration {
+            font-size: 13px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        .experience-bullets {
+            list-style-type: square;
+            margin-left: 20px;
+            font-size: 13.5px;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .education-item {
+            margin-bottom: 15px;
+        }
+        .degree {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .school {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+        .projects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .project-item h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .project-item p {
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+        @media print {
+            body {
+                padding: 0;
+            }
+            .container {
+                border: none;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Backend Spring Boot & Microservices Engineer</h1>
+            <div class="subtitle">Senior Software Engineer</div>
+            <div class="contact-info">
+                <span>ðŸ“ Delhi NCR / Remote</span>
+                <span>âœ‰ï¸ backend.spring.engineer@gmail.com</span>
+                <span>ðŸ”— linkedin.com/in/backend-spring-engineer</span>
+            </div>
+        </header>
+        
+        <div class="grid">
+            <div class="sidebar">
+                <section>
+                    <h2>Expertise</h2>
+                    <ul class="skills-list">
+                        <li>Java 17+ & Spring Boot</li>
+                        <li>Spring Cloud & Microservices</li>
+                        <li>Service Registry (Eureka)</li>
+                        <li>Spring Security & OAuth2</li>
+                        <li>RESTful Web Services</li>
+                        <li>PostgreSQL & database tuning</li>
+                        <li>Query Optimization & Indexing</li>
+                        <li>Docker & Containerization</li>
+                        <li>Asynchronous Event Streams</li>
+                        <li>RabbitMQ & Kafka</li>
+                        <li>CI/CD & Git/GitHub</li>
+                        <li>Python & Odoo Backend</li>
+                    </ul>
+                </section>
+                
+                <section>
+                    <h2>Education</h2>
+                    <div class="education-item">
+                        <div class="degree">Bachelor of Technology (B.Tech)</div>
+                        <div class="school">Indian Institute of Technology (IIT ISM) Dhanbad</div>
+                        <div class="company-duration"></div>
+                    </div>
+                </section>
+            </div>
+            
+            <div class="main-content">
+                <section>
+                    <h2>Professional Summary</h2>
+                    <p class="summary-text">
+                        A results-oriented Backend Software Engineer specialized in designing, deploying, and maintaining high-availability microservices architectures. Extensive experience in optimizing PostgreSQL databases, writing secure Rest APIs, managing transactional safety, and deploying scalable distributed systems using Docker. Passionate about engineering efficient solutions that support high-volume transaction processing and low-latency API networks.
+                    </p>
+                </section>
+                
+                <section>
+                    <h2>Professional Experience</h2>
+                    <div class="experience-item">
+                        <div class="experience-header">
+                            <span class="role-title">Lead Backend & Systems Integration Developer</span>
+                            <span class="company-duration">June 2025 - Present</span>
+                        </div>
+                        <div style="font-size: 13px; color: var(--secondary); font-weight: 500; margin-bottom: 8px;">Freelance / Self-Employed</div>
+                        <ul class="experience-bullets">
+                            <li>Architected and built a multi-channel secure webhook routing engine in Python, consolidating communications across major platforms (WhatsApp, Facebook Pages, Instagram Graph, Gmail API).</li>
+                            <li>Designed a clean, self-hosted WebSocket WhatsApp manager, bypassing meta cloud verification dependencies and eliminating official transactional fees.</li>
+                            <li>Engineered Odoo backend hooks utilizing the platform's bus system to establish websocket long-polling pathways for real-time sales alert notifications.</li>
+                            <li>Managed continuous deployment pipelines via multi-container Docker structures and optimized Postgres storage backends for session data.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="experience-item">
+                        <div class="experience-header">
+                            <span class="role-title">Java & Android Developer</span>
+                            <span class="company-duration">June 2024 - May 2025</span>
+                        </div>
+                        <div style="font-size: 13px; color: var(--secondary); font-weight: 500; margin-bottom: 8px;">Enterprise Software Solutions</div>
+                        <ul class="experience-bullets">
+                            <li>Architected resilient backend microservices utilizing Java 17, Spring Boot, Spring Cloud (Eureka, API Gateway), and PostgreSQL.</li>
+                            <li>Designed secure RESTful APIs integrating Spring Security with JWT token authentications and database connection pool tuning.</li>
+                            <li>Reduced general database API response latency by 35% through query profiling, selective indexing, and vacuum optimization.</li>
+                            <li>Programmed native mobile companion clients with Java/Kotlin and Android SDKs, incorporating SQLite Room framework for persistent offline data.</li>
+                        </ul>
+                    </div>
+                </section>
+                
+                <section>
+                    <h2>Key Projects</h2>
+                    <div class="projects-list">
+                        <div class="project-item">
+                            <h4>Distributed Microservices Core</h4>
+                            <p>A multi-service platform using Eureka registry, Spring Cloud Gateway, Config Server, and rabbitmq messaging, handling secure transaction routing and high concurrent loads.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
