@@ -766,30 +766,6 @@
             transition: var(--transition);
         }
 
-        .github-cta {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--color-border);
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-text);
-            z-index: 3;
-            transition: var(--transition);
-        }
-
-        .project-card:hover .github-cta {
-            background: var(--accent);
-            color: var(--color-background);
-            border-color: var(--accent);
-            transform: scale(1.05);
-        }
-
         /* Specific Grid Spans for Masonry Featured Project */
         .project-card.featured {
             grid-column: span 2;
@@ -1233,7 +1209,7 @@
         /* Print Media Styles */
         @media print {
             body { background: #fff; color: #1e293b; }
-            #loadingOverlay, .kinetic-bg, #particleCanvas, .persona-bar, .timeline-track-container, .footer-action-row, .github-cta { display: none !important; }
+            #loadingOverlay, .kinetic-bg, #particleCanvas, .persona-bar, .timeline-track-container, .footer-action-row { display: none !important; }
             .bento-grid, .experience-layout, .projects-grid { display: block; }
             .bento-card, .role-card, .project-card {
                 border: none;
