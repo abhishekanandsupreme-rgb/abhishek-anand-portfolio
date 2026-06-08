@@ -1634,7 +1634,7 @@
                     <div class="terminal-title">bash Â· abhishekanand@iitism</div>
                     <div style="width: 40px;"></div>
                 </div>
-                <div class="terminal-body" id="terminalBody" onclick="focusTerminalInput()" style="cursor: text; min-height: 250px; max-height: 400px; overflow-y: auto;">
+                <div class="terminal-body" id="terminalBody" onclick="focusTerminalInput(event)" style="cursor: text; min-height: 250px; max-height: 400px; overflow-y: auto;">
                     <div id="terminalHistory" style="display: flex; flex-direction: column; gap: 20px;">
                         <div class="prompt-line">
                             <span class="prompt-symbol">abhishek@iitism:~$</span>
@@ -1670,10 +1670,9 @@
                     </div>
                     
                     <!-- Live interactive input prompt, hidden until typewriter finishes -->
-                    <div class="prompt-line" id="livePromptLine" style="display: none; align-items: center; margin-top: 15px;">
-                        <span class="prompt-symbol">abhishek@iitism:~$</span>
-                        <span class="prompt-cmd" id="liveCmdText" style="white-space: pre; margin-left: 8px;"></span><span class="terminal-cursor" id="liveTerminalCursor">|</span>
-                        <input type="text" id="hiddenTerminalInput" oninput="syncTerminalInput()" onkeydown="handleTerminalKeydown(event)" style="position: absolute; opacity: 0.01; left: 0; top: 0; width: 1px; height: 1px; z-index: -1; border: none; outline: none; background: transparent; padding: 0; margin: 0;" />
+                    <div class="prompt-line" id="livePromptLine" style="display: none; align-items: center; margin-top: 15px; width: 100%;">
+                        <span class="prompt-symbol" style="white-space: nowrap;">abhishek@iitism:~$</span>
+                        <input type="text" id="terminalShellInput" onkeydown="handleTerminalKeydown(event)" style="flex: 1; background: transparent; border: none; outline: none; color: var(--color-text); font-family: var(--font-mono); font-size: 13.5px; margin-left: 8px; caret-color: var(--color-accent); width: 100%; padding: 0;" autocomplete="off" spellcheck="false" />
                     </div>
                 </div>
             </div>
@@ -2826,22 +2825,16 @@
         }
 
         // Live shell input autofocus
-        function focusTerminalInput() {
+        function focusTerminalInput(e) {
+            if (e && e.target.closest('#contactForm, input, textarea, button')) {
+                return;
+            }
             const livePrompt = document.getElementById("livePromptLine");
             if (livePrompt && livePrompt.style.display !== "none") {
-                const hiddenInput = document.getElementById("hiddenTerminalInput");
-                if (hiddenInput) {
-                    hiddenInput.focus();
+                const shellInput = document.getElementById("terminalShellInput");
+                if (shellInput) {
+                    shellInput.focus();
                 }
-            }
-        }
-
-        // Sync hidden input to screen text
-        function syncTerminalInput() {
-            const hiddenInput = document.getElementById("hiddenTerminalInput");
-            const liveCmdText = document.getElementById("liveCmdText");
-            if (hiddenInput && liveCmdText) {
-                liveCmdText.innerText = hiddenInput.value;
             }
         }
 
@@ -2849,9 +2842,9 @@
         let commandHistory = [];
         let historyIndex = -1;
 
-        // Keydown listener on hidden input
+        // Keydown listener on terminal input
         function handleTerminalKeydown(e) {
-            const input = document.getElementById("hiddenTerminalInput");
+            const input = document.getElementById("terminalShellInput");
             if (!input) return;
             
             // Audio feedback for typing (Web Audio API click tone)
@@ -2862,7 +2855,6 @@
             if (e.key === "Enter") {
                 const cmd = input.value.trim().toLowerCase();
                 input.value = "";
-                syncTerminalInput();
                 
                 if (cmd) {
                     executeTerminalCommand(cmd);
@@ -2881,7 +2873,6 @@
                         historyIndex--;
                     }
                     input.value = commandHistory[historyIndex];
-                    syncTerminalInput();
                 }
             } else if (e.key === "ArrowDown") {
                 e.preventDefault();
@@ -2893,7 +2884,6 @@
                         historyIndex = -1;
                         input.value = "";
                     }
-                    syncTerminalInput();
                 }
             } else if (e.key === "Tab") {
                 e.preventDefault();
@@ -2903,7 +2893,6 @@
                     const matches = availableCommands.filter(c => c.startsWith(currentText));
                     if (matches.length === 1) {
                         input.value = matches[0];
-                        syncTerminalInput();
                     } else if (matches.length > 1) {
                         const history = document.getElementById("terminalHistory");
                         if (history) {
