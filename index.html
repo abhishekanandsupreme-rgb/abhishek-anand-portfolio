@@ -1673,7 +1673,7 @@
                     <div class="prompt-line" id="livePromptLine" style="display: none; align-items: center; margin-top: 15px;">
                         <span class="prompt-symbol">abhishek@iitism:~$</span>
                         <span class="prompt-cmd" id="liveCmdText" style="white-space: pre; margin-left: 8px;"></span><span class="terminal-cursor" id="liveTerminalCursor">|</span>
-                        <input type="text" id="hiddenTerminalInput" oninput="syncTerminalInput()" onkeydown="handleTerminalKeydown(event)" style="position: absolute; opacity: 0; pointer-events: none; width: 0; height: 0;" />
+                        <input type="text" id="hiddenTerminalInput" oninput="syncTerminalInput()" onkeydown="handleTerminalKeydown(event)" style="position: absolute; opacity: 0.01; left: 0; top: 0; width: 1px; height: 1px; z-index: -1; border: none; outline: none; background: transparent; padding: 0; margin: 0;" />
                     </div>
                 </div>
             </div>
@@ -1681,7 +1681,7 @@
 
         <!-- PDF Printers action buttons row -->
         <div class="footer-action-row">
-            <button class="action-btn" onclick="window.print()">
+            <button class="action-btn" onclick="printResume()">
                 <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h6a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5H5z"/></svg>
                 Print Recruiting PDF
             </button>
@@ -2535,26 +2535,34 @@
             }
         });
 
-        // Trigger direct pdf download hook (Handles both local server and direct local file protocols)
+        // Trigger direct pdf download hook (Downloads the static PDF file directly)
         document.getElementById("directDownloadBtn").addEventListener("click", () => {
-            if (window.location.protocol === 'file:') {
-                // Direct local file protocol fallback download
-                const pdfPaths = {
-                    ai: 'resumes/resume_ai_architect.pdf',
-                    backend: 'resumes/resume_backend_engineer.pdf',
-                    mobile: 'resumes/resume_android_developer.pdf',
-                    generalist: 'resumes/resume_fullstack_generalist.pdf'
-                };
-                const link = document.createElement('a');
-                link.href = pdfPaths[activePersona];
-                link.download = pdfPaths[activePersona].split('/').pop();
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } else {
-                window.location.href = `/download/${activePersona}`;
-            }
+            const pdfPaths = {
+                ai: 'resumes/resume_ai_architect.pdf',
+                backend: 'resumes/resume_backend_engineer.pdf',
+                mobile: 'resumes/resume_android_developer.pdf',
+                generalist: 'resumes/resume_fullstack_generalist.pdf'
+            };
+            const path = pdfPaths[activePersona];
+            const link = document.createElement('a');
+            link.href = path;
+            link.download = path.split('/').pop();
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         });
+
+        // Trigger direct pdf view/print in a new tab
+        function printResume() {
+            const pdfPaths = {
+                ai: 'resumes/resume_ai_architect.pdf',
+                backend: 'resumes/resume_backend_engineer.pdf',
+                mobile: 'resumes/resume_android_developer.pdf',
+                generalist: 'resumes/resume_fullstack_generalist.pdf'
+            };
+            const path = pdfPaths[activePersona];
+            window.open(path, '_blank');
+        }
 
         // Initialize connecting particle animation on background canvas
         const canvas = document.getElementById("particleCanvas");
