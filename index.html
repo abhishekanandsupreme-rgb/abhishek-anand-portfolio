@@ -32,6 +32,18 @@
             --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        /* Register custom properties for smooth HSL color transitions */
+        @property --accent {
+            syntax: '<color>';
+            inherits: true;
+            initial-value: #a855f7;
+        }
+        @property --accent-glow {
+            syntax: '<color>';
+            inherits: true;
+            initial-value: rgba(168, 85, 247, 0.15);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -208,9 +220,8 @@
 
         /* Bento Card Styles with Staggered Fade-in Animation */
         .bento-card {
-            background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
-                        radial-gradient(400px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(255, 255, 255, 0.12), transparent 50%) border-box;
-            border: 1px solid transparent;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
             border-radius: var(--radius-lg);
             padding: 32px;
             backdrop-filter: blur(16px);
@@ -235,9 +246,8 @@
         .bento-card:nth-child(5) { animation-delay: 0.5s; }
 
         .bento-card:hover {
-            background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
-                        radial-gradient(400px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), var(--accent), transparent 50%) border-box;
-            box-shadow: inset 0 0 20px var(--accent-glow), 0 15px 35px -8px var(--accent-glow);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px -15px var(--accent-glow);
             transform: translateY(-2px);
         }
 
@@ -586,9 +596,8 @@
         }
 
         .role-card {
-            background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
-                        radial-gradient(400px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(255, 255, 255, 0.12), transparent 50%) border-box;
-            border: 1px solid transparent;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
             border-radius: var(--radius-lg);
             padding: 35px;
             backdrop-filter: blur(16px);
@@ -596,8 +605,7 @@
         }
 
         .role-card:hover {
-            background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
-                        radial-gradient(400px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), var(--accent), transparent 50%) border-box;
+            border-color: var(--accent);
             box-shadow: 0 10px 30px -15px var(--accent-glow);
         }
 
@@ -652,7 +660,7 @@
         }
 
         .role-bullets li::before {
-            content: 'â–ª';
+            content: '\25aa';
             color: var(--accent);
             position: absolute;
             left: 0;
@@ -668,9 +676,8 @@
         }
 
         .project-card {
-            background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
-                        radial-gradient(400px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(255, 255, 255, 0.12), transparent 50%) border-box;
-            border: 1px solid transparent;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
             border-radius: var(--radius-lg);
             overflow: hidden;
             height: 400px;
@@ -718,9 +725,8 @@
         }
 
         .project-card:hover {
-            background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
-                        radial-gradient(400px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), var(--accent), transparent 50%) border-box;
-            box-shadow: inset 0 0 20px var(--accent-glow), 0 20px 40px -10px var(--accent-glow);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px -15px var(--accent-glow);
         }
 
         .project-card:hover .project-preview-bg {
@@ -1275,9 +1281,240 @@
                 grid-column: span 1;
             }
         }
+
+        /* Custom Cursor Styling - Kinetic Dust Trail */
+        #cursor-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10000;
+            pointer-events: none;
+        }
+
+        #cursor-dot {
+            width: 4px;
+            height: 4px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate3d(0, 0, 0) translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10001;
+            opacity: 0;
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+        }
+
+        /* Hide native cursor on desktop systems with fine pointer inputs */
+        @media (pointer: fine) {
+            html, body, a, button, input, textarea, select, [role="button"], 
+            .bento-card, .role-card, .project-card, .tech-tag, .persona-tab {
+                cursor: none !important;
+            }
+        }
+
+        /* Prevent custom cursor on touch/mobile devices */
+        @media (pointer: coarse) {
+            #cursor-canvas,
+            #cursor-dot {
+                display: none !important;
+            }
+        }
+
+        /* 3D Bento Card Perspective Depth */
+        .bento-card, .role-card, .project-card {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .bento-card:hover .avatar-glow,
+        .bento-card:hover .stat-number,
+        .bento-card:hover .tech-tag,
+        .bento-card:hover .skill-item,
+        .role-card:hover .role-company-tag,
+        .project-card:hover .project-title,
+        .project-card:hover .project-metric-tag {
+            transform: translateZ(28px);
+        }
+
+        /* crawling flowchart connection lines */
+        .flow-line {
+            stroke-dasharray: 6;
+            animation: dashcrawl 30s linear infinite;
+        }
+        @keyframes dashcrawl {
+            to { stroke-dashoffset: -1000; }
+        }
+
+        /* High fidelity form focus/spring animations */
+        #contactForm input, #contactForm textarea {
+            transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s;
+        }
+        #contactForm input:focus, #contactForm textarea:focus {
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 10px var(--accent-glow) !important;
+            background-color: rgba(255, 255, 255, 0.04) !important;
+        }
+        .form-input-error {
+            animation: formShake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+            border-color: #ef4444 !important;
+        }
+        @keyframes formShake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* Bento Grid reload Glitch sweep line */
+        .theme-reload-sweep {
+            position: relative;
+            overflow: hidden;
+        }
+        .theme-reload-sweep::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(to bottom, transparent, var(--accent) 50%, transparent);
+            box-shadow: 0 0 15px var(--accent);
+            opacity: 0.7;
+            z-index: 10;
+            pointer-events: none;
+            animation: reloadSweepAnim 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes reloadSweepAnim {
+            0% { top: -10%; }
+            100% { top: 110%; }
+        }
+
+        /* CRT Screen Scanline Filters for CLI Terminal */
+        .terminal-window {
+            position: relative;
+        }
+        .terminal-window::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 5;
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+        }
+        .terminal-window::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: radial-gradient(circle, transparent 60%, rgba(3, 7, 18, 0.4) 100%);
+            pointer-events: none;
+            z-index: 6;
+        }
+        .terminal-body {
+            position: relative;
+            animation: crtFlicker 0.15s infinite alternate;
+        }
+        @keyframes crtFlicker {
+            0% { opacity: 0.985; }
+            100% { opacity: 1; }
+        }
+
+        /* Recruiter HUD styles */
+        .hud-overlay-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 999;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+        body.hud-mode-active .hud-overlay-container {
+            display: block !important;
+        }
+        .hud-corner {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border-color: var(--accent);
+            border-style: solid;
+            opacity: 0.35;
+            transition: var(--transition);
+            animation: hudPulse 3s infinite alternate;
+        }
+        .hud-top-left { top: 15px; left: 15px; border-width: 2px 0 0 2px; }
+        .hud-top-right { top: 15px; right: 15px; border-width: 2px 2px 0 0; }
+        .hud-bottom-left { bottom: 15px; left: 15px; border-width: 0 0 2px 2px; }
+        .hud-bottom-right { bottom: 15px; right: 15px; border-width: 0 2px 2px 0; }
+
+        .hud-crosshair-center {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            transform: translate(-50%, -50%);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+        .hud-crosshair-center::before, .hud-crosshair-center::after {
+            content: '';
+            position: absolute;
+            background: var(--accent);
+        }
+        .hud-crosshair-center::before { top: 7px; left: 0; width: 16px; height: 2px; }
+        .hud-crosshair-center::after { top: 0; left: 7px; width: 2px; height: 16px; }
+
+        .hud-telemetry {
+            position: fixed;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--accent);
+            opacity: 0.45;
+            line-height: 1.5;
+            text-transform: uppercase;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+        .hud-telemetry-left { top: 60px; left: 20px; text-align: left; }
+        .hud-telemetry-right { top: 60px; right: 20px; text-align: right; }
+
+        @keyframes hudPulse {
+            0% { opacity: 0.25; }
+            100% { opacity: 0.55; }
+        }
     </style>
 </head>
 <body>
+
+    <!-- Custom Cursor elements -->
+    <canvas id="cursor-canvas"></canvas>
+    <div id="cursor-dot"></div>
+
+    <!-- Recruiter HUD Overlay elements -->
+    <div id="hudOverlay" class="hud-overlay-container" style="pointer-events: none; display: none;">
+        <div class="hud-corner hud-top-left"></div>
+        <div class="hud-corner hud-top-right"></div>
+        <div class="hud-corner hud-bottom-left"></div>
+        <div class="hud-corner hud-bottom-right"></div>
+        <div class="hud-crosshair-center"></div>
+        <div class="hud-telemetry hud-telemetry-left">
+            SYS STATUS: STABLE<br>
+            FPS: 60 / REF: 60Hz<br>
+            ACCENT TEMP: 32.4C
+        </div>
+        <div class="hud-telemetry hud-telemetry-right">
+            GRID SCALE: 1.02x<br>
+            SCROLL Y: <span id="hudScrollVal">0</span>px<br>
+            VIEWPORT: <span id="hudViewportVal">1280x800</span>
+        </div>
+    </div>
 
     <!-- Cinematic Loader -->
     <div id="loadingOverlay">
@@ -1300,12 +1537,25 @@
                 <span>Currently open to new opportunities</span>
             </div>
             
-            <nav class="persona-bar">
-                <button class="persona-tab active" data-persona="ai">AI Architect</button>
-                <button class="persona-tab" data-persona="backend">Backend Engineer</button>
-                <button class="persona-tab" data-persona="mobile">Android Developer</button>
-                <button class="persona-tab" data-persona="generalist">Full-Stack</button>
-            </nav>
+            <div class="controls-bar" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <nav class="persona-bar">
+                    <button class="persona-tab active" data-persona="ai">AI Architect</button>
+                    <button class="persona-tab" data-persona="generalist">Full-Stack</button>
+                    <button class="persona-tab" data-persona="mobile">Android Developer</button>
+                    <button class="persona-tab" data-persona="backend">Backend Engineer</button>
+                </nav>
+                <div class="hud-audio-controls" style="display: flex; gap: 8px; background: rgba(10, 15, 30, 0.5); border: 1px solid var(--color-border); padding: 6px 14px; border-radius: 9999px; backdrop-filter: blur(16px); align-items: center;">
+                    <button id="soundToggleBtn" onclick="toggleAudio()" style="background: none; border: none; color: var(--color-muted); font-family: var(--font-mono); font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: var(--transition);" aria-label="Toggle Sound Cues">
+                        <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" id="speakerIcon" style="pointer-events: none;"><path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zm7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z"/></svg>
+                        <span id="soundStatusText">MUTED</span>
+                    </button>
+                    <div style="width: 1px; height: 12px; background: var(--color-border);"></div>
+                    <button id="hudToggleBtn" onclick="toggleHUD()" style="background: none; border: none; color: var(--color-muted); font-family: var(--font-mono); font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: var(--transition);" aria-label="Toggle HUD Mode">
+                        <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" style="pointer-events: none;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M11.5 8a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/></svg>
+                        <span id="hudStatusText">HUD: OFF</span>
+                    </button>
+                </div>
+            </div>
         </header>
 
         <!-- Bento Grid Home/Overview Screen -->
@@ -1503,8 +1753,10 @@
                 stat2Num: "40%",
                 stat2Lab: "AI Response Boost",
                 summary: "A highly analytical, results-driven AI Solutions Architect and Full-Stack Developer with deep expertise in bridging the gap between cutting-edge LLMs and real-world enterprise architectures. Specializes in building secure, high-availability data ingestion networks, semantic auto-reply engines, and custom Odoo ERP workflows that maximize organizational efficiency.",
-                techs: ["Python", "LLMs", "Google Gemini", "OpenAI", "React", "Docker", "REST APIs", "Odoo 19"],
+                techs: ["Python", "Agentic AI", "RAG", "LLMs", "Google Gemini", "OpenAI", "React", "Docker", "REST APIs", "Odoo 19"],
                 skills: [
+                    { name: "Agentic AI Systems", val: 95 },
+                    { name: "Retrieval-Augmented Gen (RAG)", val: 94 },
                     { name: "AI Integration & APIs", val: 96 },
                     { name: "Generative AI Systems", val: 93 },
                     { name: "Prompt Engineering", val: 97 },
@@ -1738,6 +1990,134 @@
         
         let activePersona = "ai";
 
+        // Web Audio Context & Recruiter HUD state declarations
+        let audioCtx = null;
+        let isAudioMuted = true;
+        let isHUDActive = false;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playClickSound(freq = 600, type = 'sine', duration = 0.05) {
+            if (isAudioMuted) return;
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                
+                gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.error("Audio playback error:", e);
+            }
+        }
+
+        function playChimeSound() {
+            if (isAudioMuted) return;
+            try {
+                initAudio();
+                const now = audioCtx.currentTime;
+                const freqs = [523.25, 659.25, 783.99, 1046.50];
+                freqs.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    
+                    gain.gain.setValueAtTime(0.03, now + idx * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.6);
+                    
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    
+                    osc.start(now + idx * 0.08);
+                    osc.stop(now + idx * 0.08 + 0.6);
+                });
+            } catch (e) {
+                console.error("Chime audio playback error:", e);
+            }
+        }
+
+        function toggleAudio() {
+            isAudioMuted = !isAudioMuted;
+            const soundStatusText = document.getElementById("soundStatusText");
+            const speakerIcon = document.getElementById("speakerIcon");
+            
+            if (isAudioMuted) {
+                if (soundStatusText) soundStatusText.innerText = "MUTED";
+                if (speakerIcon) {
+                    speakerIcon.innerHTML = `<path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zm7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z"/>`;
+                }
+            } else {
+                initAudio();
+                if (soundStatusText) soundStatusText.innerText = "UNMUTED";
+                if (speakerIcon) {
+                    speakerIcon.innerHTML = `<path d="M11.536 14.01A8.47 8.47 0 0 0 14 8a8.47 8.47 0 0 0-2.464-6.01.5.5 0 0 0-.707.707A7.466 7.466 0 0 1 13 8a7.466 7.466 0 0 1-2.172 5.303.5.5 0 0 0 .708.707z"/><path d="M10.121 12.596A6.48 6.48 0 0 0 12 8a6.48 6.48 0 0 0-1.879-4.596.5.5 0 0 0-.707.707A5.478 5.478 0 0 1 11 8a5.478 5.478 0 0 1-1.586 3.889.5.5 0 0 0 .707.707z"/><path d="M8.707 11.182A4.486 4.486 0 0 0 10 8a4.486 4.486 0 0 0-1.293-3.182.5.5 0 1 0-.707.707A3.486 3.486 0 0 1 9 8a3.486 3.486 0 0 1-.993 2.475.5.5 0 1 0 .707.707z"/><path d="M4 4a.5.5 0 0 0-.812.39L1.825 5.5H.5A.5.5 0 0 0 0 6v4a.5.5 0 0 0 .5.5h1.325l1.363 1.89A.5.5 0 0 0 4 12V4zm0 1v6a.5.5 0 0 1-.812.39L1.825 9.5H1v-3h.825l1.363-1.89A.5.5 0 0 1 4 5z"/>`;
+                }
+                playClickSound(800, 'sine', 0.1);
+            }
+        }
+
+        function toggleHUD() {
+            isHUDActive = !isHUDActive;
+            const hudOverlay = document.getElementById("hudOverlay");
+            const hudStatusText = document.getElementById("hudStatusText");
+            
+            if (isHUDActive) {
+                if (hudOverlay) hudOverlay.style.display = "block";
+                document.body.classList.add("hud-mode-active");
+                if (hudStatusText) hudStatusText.innerText = "HUD: ON";
+                playClickSound(1000, 'sine', 0.1);
+            } else {
+                if (hudOverlay) hudOverlay.style.display = "none";
+                document.body.classList.remove("hud-mode-active");
+                if (hudStatusText) hudStatusText.innerText = "HUD: OFF";
+                playClickSound(400, 'sine', 0.1);
+            }
+        }
+
+        function updateViewportTelemetry() {
+            const hudViewportVal = document.getElementById("hudViewportVal");
+            if (hudViewportVal) {
+                hudViewportVal.innerText = `${window.innerWidth}x${window.innerHeight}`;
+            }
+        }
+
+        // Custom Cursor variables - Kinetic Dust Trail
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorCanvas = document.getElementById('cursor-canvas');
+        const cursorCtx = cursorCanvas ? cursorCanvas.getContext('2d') : null;
+        let trailMouseX = 0;
+        let trailMouseY = 0;
+        let cursorDotX = 0;
+        let cursorDotY = 0;
+        let trailInitialized = false;
+        let trailActive = false;
+        let trailParticles = [];
+
+        function resizeCursorCanvas() {
+            if (cursorCanvas) {
+                cursorCanvas.width = window.innerWidth;
+                cursorCanvas.height = window.innerHeight;
+            }
+        }
+
         // Count up animation logic
         function animateValue(obj, start, end, duration, suffix = "") {
             let startTimestamp = null;
@@ -1763,7 +2143,9 @@
             "Kotlin": `<svg class="tech-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 2h20L2 22V2zM2 12h10L2 2z"/></svg>`,
             "Android SDK": `<svg class="tech-icon-svg icon-peek-android" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M6 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zM12 6a6 6 0 0 1 6 6v2H6v-2a6 6 0 0 1 6-6zM9 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM15 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/><path d="M8 6L6 2M16 6l2-4" stroke-linecap="round"/></svg>`,
             "Docker": `<svg class="tech-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="4"/><path d="M6 8h3v3H6zm5 0h3v3h-3zm5 0h3v3h-3zm-10 5h3v3H6zm5 0h3v3h-3zm5 0h3v3h-3z"/></svg>`,
-            "PostgreSQL": `<svg class="tech-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM12 6v12M6 12h12"/></svg>`
+            "PostgreSQL": `<svg class="tech-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM12 6v12M6 12h12"/></svg>`,
+            "Agentic AI": `<svg class="tech-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/><line x1="12" y1="2" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="22"/><line x1="2" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="22" y2="12"/></svg>`,
+            "RAG": `<svg class="tech-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><path d="M11 8a3 3 0 0 0-3 3"/></svg>`
         };
 
         function getTechIcon(name) {
@@ -1917,6 +2299,18 @@
                 setTimeout(() => {
                     bgContainer.classList.remove("morph-active");
                 }, 1500);
+            }
+
+            // Trigger bento grid sweep reload animation
+            const bentoGrid = document.querySelector(".bento-grid");
+            if (bentoGrid) {
+                bentoGrid.classList.remove("theme-reload-sweep");
+                // Trigger reflow
+                void bentoGrid.offsetWidth;
+                bentoGrid.classList.add("theme-reload-sweep");
+                setTimeout(() => {
+                    bentoGrid.classList.remove("theme-reload-sweep");
+                }, 800);
             }
 
             // Morph background blobs colors
@@ -2214,6 +2608,8 @@
             constructor(x, y, dx, dy, size, color) {
                 this.x = x;
                 this.y = y;
+                this.baseX = x;
+                this.baseY = y;
                 this.dx = dx;
                 this.dy = dy;
                 this.size = size;
@@ -2226,20 +2622,33 @@
                 ctx.fill();
             }
             update() {
-                if (this.x + this.size > canvas.width || this.x - this.size < 0) { this.dx = -this.dx; }
-                if (this.y + this.size > canvas.height || this.y - this.size < 0) { this.dy = -this.dy; }
-                this.x += this.dx;
-                this.y += this.dy;
+                this.baseX += this.dx;
+                this.baseY += this.dy;
+                
+                if (this.baseX + this.size > canvas.width || this.baseX - this.size < 0) { this.dx = -this.dx; }
+                if (this.baseY + this.size > canvas.height || this.baseY - this.size < 0) { this.dy = -this.dy; }
 
                 let distX = mouse.x - this.x;
                 let distY = mouse.y - this.y;
                 let distance = Math.sqrt(distX * distX + distY * distY);
+                
+                let forceX = 0;
+                let forceY = 0;
+                
                 if (distance < mouse.radius) {
-                    if (mouse.x < this.x && this.x < canvas.width - this.size * 10) { this.x += 1.5; }
-                    if (mouse.x > this.x && this.x > this.size * 10) { this.x -= 1.5; }
-                    if (mouse.y < this.y && this.y < canvas.height - this.size * 10) { this.y += 1.5; }
-                    if (mouse.y > this.y && this.y > this.size * 10) { this.y -= 1.5; }
+                    let force = (mouse.radius - distance) / mouse.radius;
+                    let dirX = distX / distance;
+                    let dirY = distY / distance;
+                    forceX = -dirX * force * 4.5;
+                    forceY = -dirY * force * 4.5;
                 }
+                
+                let springX = (this.baseX - this.x) * 0.08;
+                let springY = (this.baseY - this.y) * 0.08;
+                
+                this.x += forceX + springX;
+                this.y += forceY + springY;
+
                 this.draw();
             }
         }
@@ -2267,6 +2676,39 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => p.update());
             connectParticles();
+
+            // Custom cursor dust trail updates
+            if (cursorCtx) {
+                cursorCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
+                
+                // Update and draw trail particles
+                for (let i = trailParticles.length - 1; i >= 0; i--) {
+                    const p = trailParticles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.alpha -= 0.025; // fade out (takes ~40 frames / 600ms)
+                    
+                    if (p.alpha <= 0) {
+                        trailParticles.splice(i, 1);
+                        continue;
+                    }
+                    
+                    cursorCtx.save();
+                    cursorCtx.globalAlpha = p.alpha;
+                    cursorCtx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
+                    cursorCtx.beginPath();
+                    cursorCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    cursorCtx.fill();
+                    cursorCtx.restore();
+                }
+                
+                // Track focus dot position
+                if (trailInitialized && cursorDot) {
+                    cursorDotX += (trailMouseX - cursorDotX) * 0.35;
+                    cursorDotY += (trailMouseY - cursorDotY) * 0.35;
+                    cursorDot.style.transform = `translate3d(${cursorDotX}px, ${cursorDotY}px, 0) translate(-50%, -50%)`;
+                }
+            }
         }
 
         function connectParticles() {
@@ -2289,32 +2731,7 @@
                 }
             }
 
-            // Connect particles to the mouse (Ray Tracing)
-            if (mouse.x !== null && mouse.y !== null) {
-                let mouseMaxDist = 160;
-                let colors = {
-                    ai: "168, 85, 247",       // Violet
-                    backend: "16, 185, 129",   // Emerald
-                    mobile: "59, 130, 246",    // Blue
-                    generalist: "244, 63, 94"  // Rose
-                };
-                let rgb = colors[activePersona] || "255, 255, 255";
-                
-                for (let i = 0; i < particles.length; i++) {
-                    let distX = mouse.x - particles[i].x;
-                    let distY = mouse.y - particles[i].y;
-                    let dist = Math.sqrt(distX * distX + distY * distY);
-                    if (dist < mouseMaxDist) {
-                        let opacity = (1 - (dist / mouseMaxDist)) * 0.18; // glowing rays
-                        ctx.strokeStyle = `rgba(${rgb}, ${opacity})`;
-                        ctx.lineWidth = 1.0;
-                        ctx.beginPath();
-                        ctx.moveTo(mouse.x, mouse.y);
-                        ctx.lineTo(particles[i].x, particles[i].y);
-                        ctx.stroke();
-                    }
-                }
-            }
+            // Particles to mouse connection removed for Option 2 custom cursor.
         }
 
         // Matrix Glitch Decoder Helper
@@ -2452,17 +2869,76 @@
             }
         }
 
+        // CLI terminal history variables
+        let commandHistory = [];
+        let historyIndex = -1;
+
         // Keydown listener on hidden input
         function handleTerminalKeydown(e) {
+            const input = document.getElementById("hiddenTerminalInput");
+            if (!input) return;
+            
+            // Audio feedback for typing (Web Audio API click tone)
+            if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Enter') {
+                playClickSound(Math.random() * 200 + 400, 'triangle', 0.03);
+            }
+
             if (e.key === "Enter") {
-                const hiddenInput = document.getElementById("hiddenTerminalInput");
-                if (!hiddenInput) return;
-                const cmd = hiddenInput.value.trim().toLowerCase();
-                hiddenInput.value = "";
+                const cmd = input.value.trim().toLowerCase();
+                input.value = "";
                 syncTerminalInput();
                 
-                if (!cmd) return;
-                executeTerminalCommand(cmd);
+                if (cmd) {
+                    executeTerminalCommand(cmd);
+                    commandHistory.push(cmd);
+                    if (commandHistory.length > 50) commandHistory.shift();
+                } else {
+                    executeTerminalCommand("");
+                }
+                historyIndex = -1;
+            } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                if (commandHistory.length > 0) {
+                    if (historyIndex === -1) {
+                        historyIndex = commandHistory.length - 1;
+                    } else if (historyIndex > 0) {
+                        historyIndex--;
+                    }
+                    input.value = commandHistory[historyIndex];
+                    syncTerminalInput();
+                }
+            } else if (e.key === "ArrowDown") {
+                e.preventDefault();
+                if (historyIndex !== -1) {
+                    if (historyIndex < commandHistory.length - 1) {
+                        historyIndex++;
+                        input.value = commandHistory[historyIndex];
+                    } else {
+                        historyIndex = -1;
+                        input.value = "";
+                    }
+                    syncTerminalInput();
+                }
+            } else if (e.key === "Tab") {
+                e.preventDefault();
+                const currentText = input.value.trim().toLowerCase();
+                const availableCommands = ["about", "skills", "projects", "contact", "clear"];
+                if (currentText) {
+                    const matches = availableCommands.filter(c => c.startsWith(currentText));
+                    if (matches.length === 1) {
+                        input.value = matches[0];
+                        syncTerminalInput();
+                    } else if (matches.length > 1) {
+                        const history = document.getElementById("terminalHistory");
+                        if (history) {
+                            const matchLine = document.createElement("div");
+                            matchLine.className = "prompt-line";
+                            matchLine.innerHTML = `<span class="terminal-output-text" style="color: var(--color-muted);">${matches.join("  ")}</span>`;
+                            history.appendChild(matchLine);
+                            scrollToBottom();
+                        }
+                    }
+                }
             }
         }
 
@@ -2557,6 +3033,25 @@
             
             const sendBtn = document.getElementById("sendInquiryBtn");
             const originalText = sendBtn.innerText;
+            
+            // Input error shake validation helper
+            const inputs = document.querySelectorAll("#contactForm input[required], #contactForm textarea[required]");
+            let hasError = false;
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    hasError = true;
+                    input.classList.add("form-input-error");
+                    setTimeout(() => {
+                        input.classList.remove("form-input-error");
+                    }, 500);
+                }
+            });
+
+            if (hasError) {
+                playClickSound(150, 'sawtooth', 0.15);
+                return;
+            }
+
             sendBtn.innerText = "SENDING...";
             sendBtn.disabled = true;
             
@@ -2597,6 +3092,34 @@
                     scrollToBottom();
                 }
                 
+                // Play pleasant chimes & spawn particle explosion
+                playChimeSound();
+                const rect = sendBtn.getBoundingClientRect();
+                const btnX = rect.left + rect.width / 2;
+                const btnY = rect.top + rect.height / 2;
+                const colors = {
+                    ai: "168, 85, 247",
+                    backend: "16, 185, 129",
+                    mobile: "59, 130, 246",
+                    generalist: "244, 63, 94"
+                };
+                const rgb = colors[activePersona] || "255, 255, 255";
+                if (cursorCtx) {
+                    for (let i = 0; i < 35; i++) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const speed = Math.random() * 4 + 1;
+                        trailParticles.push({
+                            x: btnX,
+                            y: btnY,
+                            vx: Math.cos(angle) * speed,
+                            vy: Math.sin(angle) * speed - 0.5,
+                            alpha: 1.0,
+                            size: Math.random() * 2 + 1.2,
+                            color: rgb
+                        });
+                    }
+                }
+
                 // Reset form
                 document.getElementById("contactForm").reset();
                 
@@ -2627,16 +3150,130 @@
 
         // Initialize Page triggers
         window.addEventListener("DOMContentLoaded", () => {
-            // Track spotlight hover offsets for fluent borders
-            window.addEventListener('mousemove', (e) => {
-                const cards = document.querySelectorAll('.bento-card, .role-card, .project-card');
-                cards.forEach(card => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    card.style.setProperty('--mouse-x', `${x}px`);
-                    card.style.setProperty('--mouse-y', `${y}px`);
+            // Resize cursor canvas to fill screen
+            resizeCursorCanvas();
+
+            // Viewport HUD telemetry initialization
+            updateViewportTelemetry();
+            
+            // Bind scroll telemetry update
+            window.addEventListener('scroll', () => {
+                const hudScrollVal = document.getElementById("hudScrollVal");
+                if (hudScrollVal) {
+                    hudScrollVal.innerText = window.scrollY;
+                }
+            });
+            
+            // Bind viewport telemetry update
+            window.addEventListener('resize', updateViewportTelemetry);
+
+            // Bind global micro-click sounds on interactive elements
+            document.addEventListener('click', (e) => {
+                const target = e.target;
+                if (!target) return;
+                const interactive = target.closest('a, button, .bento-card, .role-card, .project-card, .tech-tag, .persona-tab, #copyBtn, #sendInquiryBtn, input, textarea, [role="button"]');
+                if (interactive) {
+                    playClickSound(600, 'sine', 0.05);
+                }
+            });
+
+            // IntersectionObserver Scroll Reveals with Matrix Glitch
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = entry.target;
+                        let textElement = target;
+                        if (target.classList.contains('role-card')) {
+                            textElement = target.querySelector('.role-title');
+                        }
+                        if (textElement) {
+                            if (textElement._isGlitching) return;
+                            textElement._isGlitching = true;
+                            let text = textElement.getAttribute('data-original-text');
+                            if (!text) {
+                                text = textElement.innerText || textElement.textContent;
+                                textElement.setAttribute('data-original-text', text);
+                            }
+                            glitchDecodeText(textElement, text, 800);
+                            setTimeout(() => {
+                                textElement._isGlitching = false;
+                            }, 800);
+                        }
+                        observer.unobserve(target);
+                    }
                 });
+            }, {
+                threshold: 0.15
+            });
+            document.querySelectorAll('.section-title, .bento-header, .role-card').forEach(el => revealObserver.observe(el));
+
+            // Custom cursor mouse move coordinate updates & spark spawn loop
+            window.addEventListener('mousemove', (e) => {
+                trailMouseX = e.clientX;
+                trailMouseY = e.clientY;
+                if (!trailInitialized && cursorDot) {
+                    cursorDotX = trailMouseX;
+                    cursorDotY = trailMouseY;
+                    cursorDot.style.opacity = '1';
+                    trailInitialized = true;
+                }
+                
+                if (trailInitialized && cursorCtx) {
+                    const colors = {
+                        ai: "168, 85, 247",
+                        backend: "16, 185, 129",
+                        mobile: "59, 130, 246",
+                        generalist: "244, 63, 94"
+                    };
+                    const rgb = colors[activePersona] || "255, 255, 255";
+                    const count = trailActive ? 4 : 2;
+                    for (let i = 0; i < count; i++) {
+                        trailParticles.push({
+                            x: trailMouseX,
+                            y: trailMouseY,
+                            vx: (Math.random() - 0.5) * 1.5,
+                            vy: (Math.random() - 0.5) * 1.5 - 0.2, // slight upward float
+                            alpha: 1.0,
+                            size: Math.random() * 1.5 + 0.8,
+                            color: rgb
+                        });
+                    }
+                }
+            });
+
+            // Toggle custom cursor visibility when cursor enters/leaves viewport
+            document.addEventListener('mouseleave', () => {
+                if (cursorDot) {
+                    cursorDot.style.opacity = '0';
+                }
+            });
+            document.addEventListener('mouseenter', () => {
+                if (trailInitialized && cursorDot) {
+                    cursorDot.style.opacity = '1';
+                }
+            });
+
+            // Increase sparks density when hovering interactive elements
+            document.addEventListener('mouseover', (e) => {
+                const target = e.target;
+                if (!target) return;
+                const interactive = target.closest('a, button, .bento-card, .role-card, .project-card, .tech-tag, .persona-tab, #copyBtn, #sendInquiryBtn, input, textarea, [role="button"]');
+                if (interactive) {
+                    trailActive = true;
+                }
+            });
+
+            document.addEventListener('mouseout', (e) => {
+                const target = e.target;
+                if (!target) return;
+                const related = e.relatedTarget;
+                const interactive = target.closest('a, button, .bento-card, .role-card, .project-card, .tech-tag, .persona-tab, #copyBtn, #sendInquiryBtn, input, textarea, [role="button"]');
+                if (interactive) {
+                    const nextInteractive = related ? related.closest('a, button, .bento-card, .role-card, .project-card, .tech-tag, .persona-tab, #copyBtn, #sendInquiryBtn, input, textarea, [role="button"]') : null;
+                    if (!nextInteractive) {
+                        trailActive = false;
+                    }
+                }
             });
 
             // 3D Perspective Tilt on Hover
