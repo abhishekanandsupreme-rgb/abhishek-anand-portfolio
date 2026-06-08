@@ -2888,17 +2888,20 @@
             } else if (e.key === "Tab") {
                 e.preventDefault();
                 const currentText = input.value.trim().toLowerCase();
-                const availableCommands = ["about", "skills", "projects", "contact", "clear"];
-                if (currentText) {
-                    const matches = availableCommands.filter(c => c.startsWith(currentText));
+                const hasSlash = currentText.startsWith('/');
+                const lookupText = hasSlash ? currentText.slice(1) : currentText;
+                const availableCommands = ["about", "skills", "projects", "contact", "clear", "help"];
+                if (lookupText) {
+                    const matches = availableCommands.filter(c => c.startsWith(lookupText));
                     if (matches.length === 1) {
-                        input.value = matches[0];
+                        input.value = (hasSlash ? "/" : "") + matches[0];
                     } else if (matches.length > 1) {
                         const history = document.getElementById("terminalHistory");
                         if (history) {
                             const matchLine = document.createElement("div");
                             matchLine.className = "prompt-line";
-                            matchLine.innerHTML = `<span class="terminal-output-text" style="color: var(--color-muted);">${matches.join("  ")}</span>`;
+                            const displayMatches = matches.map(m => (hasSlash ? "/" : "") + m);
+                            matchLine.innerHTML = `<span class="terminal-output-text" style="color: var(--color-muted);">${displayMatches.join("  ")}</span>`;
                             history.appendChild(matchLine);
                             scrollToBottom();
                         }
@@ -2922,8 +2925,11 @@
             const outputLine = document.createElement("div");
             outputLine.className = "prompt-line";
             
+            // Gracefully handle slash commands (e.g. /skills) by stripping leading slash
+            const cleanCmd = cmd.startsWith('/') ? cmd.slice(1) : cmd;
+            
             let outputHTML = "";
-            if (cmd === "help") {
+            if (cleanCmd === "help") {
                 outputHTML = `
                     <div class="terminal-output-text">
                         Available commands:<br>
@@ -2934,14 +2940,14 @@
                         &nbsp;&nbsp;<span style="color: var(--accent);">clear</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Clear the shell console screen
                     </div>
                 `;
-            } else if (cmd === "about") {
+            } else if (cleanCmd === "about") {
                 outputHTML = `
                     <div class="terminal-output-text">
                         <strong>Role:</strong> ${activeData.title}<br><br>
                         <strong>Summary:</strong> ${activeData.summary}
                     </div>
                 `;
-            } else if (cmd === "skills") {
+            } else if (cleanCmd === "skills") {
                 let table = "+-----------------------------------------+----------+<br>";
                 table += "| COMPETENCY                              | LEVEL    |<br>";
                 table += "+-----------------------------------------+----------+<br>";
@@ -2954,13 +2960,13 @@
                 });
                 table += "+-----------------------------------------+----------+";
                 outputHTML = `<div class="terminal-output-text" style="font-family: var(--font-mono); line-height: 1.3;">${table}</div>`;
-            } else if (cmd === "projects") {
+            } else if (cleanCmd === "projects") {
                 let list = "";
                 activeData.projects.forEach(p => {
                     list += `• <strong>${p.title}</strong> - ${p.desc}<br>&nbsp;&nbsp;Tech: [${p.techs.join(", ")}]<br><br>`;
                 });
                 outputHTML = `<div class="terminal-output-text">${list}</div>`;
-            } else if (cmd === "contact") {
+            } else if (cleanCmd === "contact") {
                 const contactBox = document.getElementById("terminalContactBox");
                 if (contactBox) {
                     contactBox.style.display = "flex";
@@ -2971,7 +2977,7 @@
                     }, 50);
                 }
                 outputHTML = `<div class="terminal-output-text">Email and inquiry form unlocked below.</div>`;
-            } else if (cmd === "clear") {
+            } else if (cleanCmd === "clear") {
                 history.innerHTML = "";
                 scrollToBottom();
                 return;
