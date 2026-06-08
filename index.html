@@ -58,6 +58,11 @@
             z-index: 0;
             pointer-events: none;
             overflow: hidden;
+            transition: filter 0.5s ease;
+        }
+
+        .kinetic-bg.morph-active {
+            filter: url(#liquid-morph);
         }
 
         .kinetic-blob {
@@ -203,8 +208,9 @@
 
         /* Bento Card Styles with Staggered Fade-in Animation */
         .bento-card {
-            background: var(--color-surface);
-            border: 1px solid var(--color-border);
+            background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+                        radial-gradient(400px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(255, 255, 255, 0.12), transparent 50%) border-box;
+            border: 1px solid transparent;
             border-radius: var(--radius-lg);
             padding: 32px;
             backdrop-filter: blur(16px);
@@ -229,7 +235,8 @@
         .bento-card:nth-child(5) { animation-delay: 0.5s; }
 
         .bento-card:hover {
-            border-color: var(--accent);
+            background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+                        radial-gradient(400px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), var(--accent), transparent 50%) border-box;
             box-shadow: inset 0 0 20px var(--accent-glow), 0 15px 35px -8px var(--accent-glow);
             transform: translateY(-2px);
         }
@@ -579,8 +586,9 @@
         }
 
         .role-card {
-            background: var(--color-surface);
-            border: 1px solid var(--color-border);
+            background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+                        radial-gradient(400px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(255, 255, 255, 0.12), transparent 50%) border-box;
+            border: 1px solid transparent;
             border-radius: var(--radius-lg);
             padding: 35px;
             backdrop-filter: blur(16px);
@@ -588,7 +596,8 @@
         }
 
         .role-card:hover {
-            border-color: var(--accent);
+            background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+                        radial-gradient(400px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), var(--accent), transparent 50%) border-box;
             box-shadow: 0 10px 30px -15px var(--accent-glow);
         }
 
@@ -659,8 +668,9 @@
         }
 
         .project-card {
-            background: var(--color-surface);
-            border: 1px solid var(--color-border);
+            background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+                        radial-gradient(400px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), rgba(255, 255, 255, 0.12), transparent 50%) border-box;
+            border: 1px solid transparent;
             border-radius: var(--radius-lg);
             overflow: hidden;
             height: 400px;
@@ -708,7 +718,8 @@
         }
 
         .project-card:hover {
-            border-color: var(--accent);
+            background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+                        radial-gradient(400px circle at var(--mouse-x, -999px) var(--mouse-y, -999px), var(--accent), transparent 50%) border-box;
             box-shadow: inset 0 0 20px var(--accent-glow), 0 20px 40px -10px var(--accent-glow);
         }
 
@@ -785,12 +796,11 @@
         }
 
         .terminal-window {
-            background: rgba(10, 15, 30, 0.65);
+            background: #0a0f1e;
             border: 1px solid var(--color-border);
             border-radius: var(--radius-lg);
             overflow: hidden;
             box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(20px);
             transition: var(--transition);
         }
 
@@ -1398,21 +1408,46 @@
                     <div class="terminal-title">bash Â· abhishekanand@iitism</div>
                     <div style="width: 40px;"></div>
                 </div>
-                <div class="terminal-body">
-                    <div class="prompt-line">
+                <div class="terminal-body" id="terminalBody" onclick="focusTerminalInput()" style="cursor: text; min-height: 250px; max-height: 400px; overflow-y: auto;">
+                    <div id="terminalHistory" style="display: flex; flex-direction: column; gap: 20px;">
+                        <div class="prompt-line">
+                            <span class="prompt-symbol">abhishek@iitism:~$</span>
+                            <span class="prompt-cmd" id="terminalCmd1"></span><span class="terminal-cursor">|</span>
+                        </div>
+                        <div class="prompt-line" id="terminalOutput1" style="display: none;">
+                            <span class="terminal-output-text">🟢 Currently open to new high-performance remote contracts and Delhi-NCR roles. Ready to deliver elite software designs.</span>
+                        </div>
+                        <div class="prompt-line" id="terminalPrompt2" style="display: none;">
+                            <span class="prompt-symbol">abhishek@iitism:~$</span>
+                            <span class="prompt-cmd" id="terminalCmd2"></span><span class="terminal-cursor" style="display: none;">|</span>
+                        </div>
+                        <div class="terminal-contact-box" id="terminalContactBox" style="opacity: 0; transform: translateY(10px); transition: all 0.6s ease; display: none;">
+                            <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: wrap; gap: 10px;">
+                                    <span class="contact-email">abhishekanandsupreme@gmail.com</span>
+                                    <button class="terminal-copy-btn" id="copyBtn" onclick="copyEmail()">Copy Email</button>
+                                </div>
+                                <div style="border-top: 1px solid rgba(255,255,255,0.04); padding-top: 12px; margin-top: 5px; width: 100%;">
+                                    <span style="font-size: 12px; color: var(--color-muted); display: block; margin-bottom: 8px;">Or submit a quick inquiry directly:</span>
+                                    <form id="contactForm" onsubmit="submitInquiry(event)" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                            <input type="text" id="formName" placeholder="Your Name" required style="background: rgba(255,255,255,0.02); border: 1px solid var(--color-border); color: #fff; padding: 8px 12px; border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 13px; outline: none; transition: border-color 0.3s;" />
+                                            <input type="text" id="formCompany" placeholder="Company Name" style="background: rgba(255,255,255,0.02); border: 1px solid var(--color-border); color: #fff; padding: 8px 12px; border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 13px; outline: none; transition: border-color 0.3s;" />
+                                        </div>
+                                        <input type="email" id="formEmail" placeholder="Your Email Address" required style="background: rgba(255,255,255,0.02); border: 1px solid var(--color-border); color: #fff; padding: 8px 12px; border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 13px; outline: none; transition: border-color 0.3s;" />
+                                        <textarea id="formMessage" placeholder="Type your message..." required rows="2" style="background: rgba(255,255,255,0.02); border: 1px solid var(--color-border); color: #fff; padding: 8px 12px; border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 13px; outline: none; transition: border-color 0.3s; resize: none;"></textarea>
+                                        <button type="submit" class="terminal-copy-btn" id="sendInquiryBtn" style="align-self: flex-end; padding: 8px 16px; font-size: 11px;">Send Message</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Live interactive input prompt, hidden until typewriter finishes -->
+                    <div class="prompt-line" id="livePromptLine" style="display: none; align-items: center; margin-top: 15px;">
                         <span class="prompt-symbol">abhishek@iitism:~$</span>
-                        <span class="prompt-cmd" id="terminalCmd1"></span><span class="terminal-cursor">|</span>
-                    </div>
-                    <div class="prompt-line" id="terminalOutput1" style="display: none;">
-                        <span class="terminal-output-text">🟢 Currently open to new high-performance remote contracts and Delhi-NCR roles. Ready to deliver elite software designs.</span>
-                    </div>
-                    <div class="prompt-line" id="terminalPrompt2" style="display: none;">
-                        <span class="prompt-symbol">abhishek@iitism:~$</span>
-                        <span class="prompt-cmd" id="terminalCmd2"></span><span class="terminal-cursor" style="display: none;">|</span>
-                    </div>
-                    <div class="terminal-contact-box" id="terminalContactBox" style="opacity: 0; transform: translateY(10px); transition: all 0.6s ease;">
-                        <span class="contact-email">abhishekanandsupreme@gmail.com</span>
-                        <button class="terminal-copy-btn" id="copyBtn" onclick="copyEmail()">Copy Email</button>
+                        <span class="prompt-cmd" id="liveCmdText" style="white-space: pre; margin-left: 8px;"></span><span class="terminal-cursor" id="liveTerminalCursor">|</span>
+                        <input type="text" id="hiddenTerminalInput" oninput="syncTerminalInput()" onkeydown="handleTerminalKeydown(event)" style="position: absolute; opacity: 0; pointer-events: none; width: 0; height: 0;" />
                     </div>
                 </div>
             </div>
@@ -1769,6 +1804,10 @@
                     <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
                         <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.5"/>
                     </filter>
+                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="3" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
                 </defs>
             `;
 
@@ -1793,7 +1832,10 @@
                         const endY = startY;
                         
                         linesHTML += `
-                            <line x1="${startX}" y1="${startY}" x2="${endX}" y2="${endY}" stroke="${accentColor}" stroke-width="1.5" stroke-dasharray="4 4" class="flow-line" marker-end="url(#arrow)" />
+                            <path id="flow-path-horiz-${i}" d="M ${startX} ${startY} L ${endX} ${endY}" stroke="${accentColor}" stroke-width="1.5" stroke-dasharray="4 4" class="flow-line" marker-end="url(#arrow)" fill="none" />
+                            <circle r="3" fill="#fff" style="filter: drop-shadow(0 0 3px ${accentColor});">
+                                <animateMotion dur="2.5s" repeatCount="indefinite" path="M ${startX} ${startY} L ${endX} ${endY}" />
+                            </circle>
                         `;
                     }
                 }
@@ -1827,7 +1869,10 @@
                                 const endX = startX;
                                 const endY = yPos + rowHeight - 8;
                                 nodeHTML += `
-                                    <line x1="${startX}" y1="${startY}" x2="${endX}" y2="${endY}" stroke="${accentColor}" stroke-width="1.5" stroke-dasharray="4 4" class="flow-line" marker-end="url(#arrow)" />
+                                    <path id="flow-path-vert-${i}" d="M ${startX} ${startY} L ${endX} ${endY}" stroke="${accentColor}" stroke-width="1.5" stroke-dasharray="4 4" class="flow-line" marker-end="url(#arrow)" fill="none" />
+                                    <circle r="3" fill="#fff" style="filter: drop-shadow(0 0 3px ${accentColor});">
+                                        <animateMotion dur="2s" repeatCount="indefinite" path="M ${startX} ${startY} L ${endX} ${endY}" />
+                                    </circle>
                                 `;
                             }
                             return nodeHTML;
@@ -1865,6 +1910,34 @@
             avatarEl.innerText = lettersVal;
             avatarRing.style.boxShadow = `0 0 20px -5px ${colorVal}`;
 
+            // Trigger liquid morph transition on background blobs
+            const bgContainer = document.querySelector(".kinetic-bg");
+            if (bgContainer) {
+                bgContainer.classList.add("morph-active");
+                setTimeout(() => {
+                    bgContainer.classList.remove("morph-active");
+                }, 1500);
+            }
+
+            // Morph background blobs colors
+            const blobViolet = document.getElementById("blobViolet");
+            const blobEmerald = document.getElementById("blobEmerald");
+            if (blobViolet && blobEmerald) {
+                if (key === "ai") {
+                    blobViolet.style.background = "radial-gradient(circle, #a855f7 0%, transparent 70%)";
+                    blobEmerald.style.background = "radial-gradient(circle, #10b981 0%, transparent 70%)";
+                } else if (key === "backend") {
+                    blobViolet.style.background = "radial-gradient(circle, #10b981 0%, transparent 70%)";
+                    blobEmerald.style.background = "radial-gradient(circle, #0284c7 0%, transparent 70%)";
+                } else if (key === "mobile") {
+                    blobViolet.style.background = "radial-gradient(circle, #3b82f6 0%, transparent 70%)";
+                    blobEmerald.style.background = "radial-gradient(circle, #a855f7 0%, transparent 70%)";
+                } else if (key === "generalist") {
+                    blobViolet.style.background = "radial-gradient(circle, #f43f5e 0%, transparent 70%)";
+                    blobEmerald.style.background = "radial-gradient(circle, #e11d48 0%, transparent 70%)";
+                }
+            }
+
             // Trigger card fading transitions
             const cards = document.querySelectorAll(".bento-card, .role-card, .project-card");
             cards.forEach(c => {
@@ -1873,9 +1946,15 @@
             });
 
             setTimeout(() => {
-                // Update Text Content
-                titleEl.innerText = data.title;
+                // Update Text Content with Matrix Glitch Decoder
+                glitchDecodeText(titleEl, data.title, 800);
                 summaryEl.innerText = data.summary;
+
+                // Glitch bento headers
+                const bentoHeaders = document.querySelectorAll(".bento-header");
+                bentoHeaders.forEach(bh => {
+                    glitchDecodeText(bh, bh.innerText, 800);
+                });
 
                 // Animate Stats Count Ups
                 const val1 = parseInt(data.stat1Num);
@@ -1990,10 +2069,11 @@
                     c.style.transform = "translateY(0) scale(1)";
                 });
 
-                // Fill progress bars
+                // Fill progress bars with staggered delays
                 setTimeout(() => {
                     const fills = skillsEl.querySelectorAll(".skill-fill");
                     fills.forEach((fill, index) => {
+                        fill.style.transitionDelay = (index * 80) + "ms";
                         fill.style.width = data.skills[index].val + "%";
                     });
                 }, 100);
@@ -2191,6 +2271,7 @@
 
         function connectParticles() {
             let maxDist = 110;
+            // Connect particles to other particles
             for (let a = 0; a < particles.length; a++) {
                 for (let b = a; b < particles.length; b++) {
                     let distX = particles[a].x - particles[b].x;
@@ -2207,6 +2288,75 @@
                     }
                 }
             }
+
+            // Connect particles to the mouse (Ray Tracing)
+            if (mouse.x !== null && mouse.y !== null) {
+                let mouseMaxDist = 160;
+                let colors = {
+                    ai: "168, 85, 247",       // Violet
+                    backend: "16, 185, 129",   // Emerald
+                    mobile: "59, 130, 246",    // Blue
+                    generalist: "244, 63, 94"  // Rose
+                };
+                let rgb = colors[activePersona] || "255, 255, 255";
+                
+                for (let i = 0; i < particles.length; i++) {
+                    let distX = mouse.x - particles[i].x;
+                    let distY = mouse.y - particles[i].y;
+                    let dist = Math.sqrt(distX * distX + distY * distY);
+                    if (dist < mouseMaxDist) {
+                        let opacity = (1 - (dist / mouseMaxDist)) * 0.18; // glowing rays
+                        ctx.strokeStyle = `rgba(${rgb}, ${opacity})`;
+                        ctx.lineWidth = 1.0;
+                        ctx.beginPath();
+                        ctx.moveTo(mouse.x, mouse.y);
+                        ctx.lineTo(particles[i].x, particles[i].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Matrix Glitch Decoder Helper
+        function glitchDecodeText(element, finalHtml, duration = 800) {
+            if (element._glitchInterval) {
+                clearInterval(element._glitchInterval);
+            }
+            
+            const targetText = finalHtml;
+            const chars = "$#&%*@019?<>[]{}";
+            const length = targetText.length;
+            let currentIteration = 0;
+            
+            const totalFrames = 30;
+            const frameDuration = duration / totalFrames;
+            
+            element._glitchInterval = setInterval(() => {
+                let currentText = "";
+                for (let i = 0; i < length; i++) {
+                    if (targetText[i] === " ") {
+                        currentText += " ";
+                        continue;
+                    }
+                    
+                    const charProgress = (currentIteration / totalFrames) * length;
+                    
+                    if (i < charProgress) {
+                        currentText += targetText[i];
+                    } else {
+                        currentText += chars[Math.floor(Math.random() * chars.length)];
+                    }
+                }
+                
+                element.innerHTML = currentText;
+                currentIteration++;
+                
+                if (currentIteration > totalFrames) {
+                    clearInterval(element._glitchInterval);
+                    element.innerHTML = finalHtml;
+                    delete element._glitchInterval;
+                }
+            }, frameDuration);
         }
 
         // Typewriter effect for terminal commands
@@ -2232,13 +2382,14 @@
             const cmd2 = "echo $CONTACT_EMAIL";
             
             // Start typing cmd1
-            typeWriter("terminalCmd1", cmd1, 50, () => {
+            typeWriter("terminalCmd1", cmd1, 40, () => {
                 // Hide cursor 1, show output 1
                 const cursor1 = document.querySelector("#terminalCmd1 + .terminal-cursor");
                 if (cursor1) cursor1.style.display = "none";
                 
                 const out1 = document.getElementById("terminalOutput1");
                 if (out1) out1.style.display = "flex";
+                scrollToBottom();
                 
                 // Show prompt 2
                 setTimeout(() => {
@@ -2247,26 +2398,293 @@
                     
                     const cursor2 = document.querySelector("#terminalCmd2 + .terminal-cursor");
                     if (cursor2) cursor2.style.display = "inline";
+                    scrollToBottom();
                     
                     // Type cmd2
                     setTimeout(() => {
-                        typeWriter("terminalCmd2", cmd2, 50, () => {
+                        typeWriter("terminalCmd2", cmd2, 40, () => {
+                            const cursor2 = document.querySelector("#terminalCmd2 + .terminal-cursor");
+                            if (cursor2) cursor2.style.display = "none";
+                            
                             // Show contact email box with animation
-                            setTimeout(() => {
-                                const contactBox = document.getElementById("terminalContactBox");
-                                if (contactBox) {
+                            const contactBox = document.getElementById("terminalContactBox");
+                            if (contactBox) {
+                                contactBox.style.display = "flex";
+                                setTimeout(() => {
                                     contactBox.style.opacity = "1";
                                     contactBox.style.transform = "translateY(0)";
+                                    scrollToBottom();
+                                }, 50);
+                            }
+                            
+                            // Unlock the live prompt line!
+                            setTimeout(() => {
+                                const livePrompt = document.getElementById("livePromptLine");
+                                if (livePrompt) {
+                                    livePrompt.style.display = "flex";
+                                    scrollToBottom();
+                                    focusTerminalInput();
                                 }
-                            }, 300);
+                            }, 400);
                         });
                     }, 500);
                 }, 600);
             });
         }
 
+        // Live shell input autofocus
+        function focusTerminalInput() {
+            const livePrompt = document.getElementById("livePromptLine");
+            if (livePrompt && livePrompt.style.display !== "none") {
+                const hiddenInput = document.getElementById("hiddenTerminalInput");
+                if (hiddenInput) {
+                    hiddenInput.focus();
+                }
+            }
+        }
+
+        // Sync hidden input to screen text
+        function syncTerminalInput() {
+            const hiddenInput = document.getElementById("hiddenTerminalInput");
+            const liveCmdText = document.getElementById("liveCmdText");
+            if (hiddenInput && liveCmdText) {
+                liveCmdText.innerText = hiddenInput.value;
+            }
+        }
+
+        // Keydown listener on hidden input
+        function handleTerminalKeydown(e) {
+            if (e.key === "Enter") {
+                const hiddenInput = document.getElementById("hiddenTerminalInput");
+                if (!hiddenInput) return;
+                const cmd = hiddenInput.value.trim().toLowerCase();
+                hiddenInput.value = "";
+                syncTerminalInput();
+                
+                if (!cmd) return;
+                executeTerminalCommand(cmd);
+            }
+        }
+
+        // Execute input commands
+        function executeTerminalCommand(cmd) {
+            const history = document.getElementById("terminalHistory");
+            const activeData = personaData[activePersona];
+            if (!history || !activeData) return;
+            
+            // Append command prompt
+            const cmdLine = document.createElement("div");
+            cmdLine.className = "prompt-line";
+            cmdLine.innerHTML = `<span class="prompt-symbol">abhishek@iitism:~$</span> <span class="prompt-cmd" style="margin-left: 8px;">${cmd}</span>`;
+            history.appendChild(cmdLine);
+            
+            const outputLine = document.createElement("div");
+            outputLine.className = "prompt-line";
+            
+            let outputHTML = "";
+            if (cmd === "help") {
+                outputHTML = `
+                    <div class="terminal-output-text">
+                        Available commands:<br>
+                        &nbsp;&nbsp;<span style="color: var(--accent);">about</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Print developer background overview<br>
+                        &nbsp;&nbsp;<span style="color: var(--accent);">skills</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Display core competencies ASCII table<br>
+                        &nbsp;&nbsp;<span style="color: var(--accent);">projects</span>&nbsp;&nbsp;&nbsp;- List high-impact portfolio builds<br>
+                        &nbsp;&nbsp;<span style="color: var(--accent);">contact</span>&nbsp;&nbsp;&nbsp;&nbsp;- Reveal email & direct recruiter contact form<br>
+                        &nbsp;&nbsp;<span style="color: var(--accent);">clear</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Clear the shell console screen
+                    </div>
+                `;
+            } else if (cmd === "about") {
+                outputHTML = `
+                    <div class="terminal-output-text">
+                        <strong>Role:</strong> ${activeData.title}<br><br>
+                        <strong>Summary:</strong> ${activeData.summary}
+                    </div>
+                `;
+            } else if (cmd === "skills") {
+                let table = "+-----------------------------------------+----------+<br>";
+                table += "| COMPETENCY                              | LEVEL    |<br>";
+                table += "+-----------------------------------------+----------+<br>";
+                activeData.skills.forEach(s => {
+                    const padCount = 39 - s.name.length;
+                    const padStr = "&nbsp;".repeat(padCount > 0 ? padCount : 0);
+                    const valPadCount = 7 - (s.val + "%").length;
+                    const valStr = s.val + "%" + "&nbsp;".repeat(valPadCount > 0 ? valPadCount : 0);
+                    table += `| ${s.name}${padStr} | ${valStr} |<br>`;
+                });
+                table += "+-----------------------------------------+----------+";
+                outputHTML = `<div class="terminal-output-text" style="font-family: var(--font-mono); line-height: 1.3;">${table}</div>`;
+            } else if (cmd === "projects") {
+                let list = "";
+                activeData.projects.forEach(p => {
+                    list += `• <strong>${p.title}</strong> - ${p.desc}<br>&nbsp;&nbsp;Tech: [${p.techs.join(", ")}]<br><br>`;
+                });
+                outputHTML = `<div class="terminal-output-text">${list}</div>`;
+            } else if (cmd === "contact") {
+                const contactBox = document.getElementById("terminalContactBox");
+                if (contactBox) {
+                    contactBox.style.display = "flex";
+                    setTimeout(() => {
+                        contactBox.style.opacity = "1";
+                        contactBox.style.transform = "translateY(0)";
+                        scrollToBottom();
+                    }, 50);
+                }
+                outputHTML = `<div class="terminal-output-text">Email and inquiry form unlocked below.</div>`;
+            } else if (cmd === "clear") {
+                history.innerHTML = "";
+                scrollToBottom();
+                return;
+            } else {
+                outputHTML = `<div class="terminal-output-text" style="color: #ef4444;">bash: command not found: ${cmd}. Type 'help' for list of commands.</div>`;
+            }
+            
+            outputLine.innerHTML = outputHTML;
+            history.appendChild(outputLine);
+            scrollToBottom();
+        }
+
+        // Helper scroll to console bottom
+        function scrollToBottom() {
+            const termBody = document.getElementById("terminalBody");
+            if (termBody) {
+                termBody.scrollTop = termBody.scrollHeight;
+            }
+        }
+
+        // Asynchronous form submit handler
+        function submitInquiry(e) {
+            e.preventDefault();
+            
+            const sendBtn = document.getElementById("sendInquiryBtn");
+            const originalText = sendBtn.innerText;
+            sendBtn.innerText = "SENDING...";
+            sendBtn.disabled = true;
+            
+            const name = document.getElementById("formName").value;
+            const company = document.getElementById("formCompany").value;
+            const email = document.getElementById("formEmail").value;
+            const message = document.getElementById("formMessage").value;
+            
+            fetch("/inquiry", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ name, company, email, message })
+            })
+            .then(res => res.json())
+            .then(data => {
+                sendBtn.innerText = "SENT";
+                
+                // Show success toast with backend message
+                const successToast = document.getElementById("successToast");
+                const toastMsg = document.getElementById("toastMessage");
+                if (successToast && toastMsg) {
+                    toastMsg.innerText = data.message || "Inquiry sent successfully!";
+                    successToast.classList.add("show");
+                    setTimeout(() => {
+                        successToast.classList.remove("show");
+                    }, 3500);
+                }
+                
+                // Log confirmation output directly inside terminal shell!
+                const history = document.getElementById("terminalHistory");
+                if (history) {
+                    const formLine = document.createElement("div");
+                    formLine.className = "prompt-line";
+                    formLine.innerHTML = `<span class="terminal-output-text" style="color: var(--color-accent);">🟢 Server Response: ${data.message}</span>`;
+                    history.appendChild(formLine);
+                    scrollToBottom();
+                }
+                
+                // Reset form
+                document.getElementById("contactForm").reset();
+                
+                setTimeout(() => {
+                    sendBtn.innerText = originalText;
+                    sendBtn.disabled = false;
+                }, 2000);
+            })
+            .catch(err => {
+                console.error("Failed to send inquiry:", err);
+                sendBtn.innerText = "FAILED";
+                sendBtn.disabled = false;
+                
+                const history = document.getElementById("terminalHistory");
+                if (history) {
+                    const formLine = document.createElement("div");
+                    formLine.className = "prompt-line";
+                    formLine.innerHTML = `<span class="terminal-output-text" style="color: #ef4444;">❌ Server Connection Error: Webhook notification dispatch failed.</span>`;
+                    history.appendChild(formLine);
+                    scrollToBottom();
+                }
+                
+                setTimeout(() => {
+                    sendBtn.innerText = originalText;
+                }, 2000);
+            });
+        }
+
         // Initialize Page triggers
         window.addEventListener("DOMContentLoaded", () => {
+            // Track spotlight hover offsets for fluent borders
+            window.addEventListener('mousemove', (e) => {
+                const cards = document.querySelectorAll('.bento-card, .role-card, .project-card');
+                cards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
+            });
+
+            // 3D Perspective Tilt on Hover
+            const tiltCards = document.querySelectorAll('.bento-card, .role-card, .project-card');
+            tiltCards.forEach(card => {
+                card.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+                
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const w = rect.width;
+                    const h = rect.height;
+                    const x = e.clientX - rect.left - (w / 2);
+                    const y = e.clientY - rect.top - (h / 2);
+                    
+                    const rX = -(y / (h / 2)) * 8; // Max 8 deg rotation
+                    const rY = (x / (w / 2)) * 8;
+                    
+                    card.style.transition = 'transform 0.1s ease-out, box-shadow 0.1s ease-out';
+                    card.style.transform = `perspective(1000px) rotateX(${rX}deg) rotateY(${rY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+                });
+            });
+
+            // Matrix Glitch Hover Effect (Event Delegation)
+            document.addEventListener('mouseover', (e) => {
+                const target = e.target.closest('.bento-header, .section-title, .hero-name, .project-title, .role-title');
+                if (target) {
+                    if (target._isGlitching) return;
+                    target._isGlitching = true;
+                    
+                    let text = target.getAttribute('data-original-text');
+                    if (!text) {
+                        text = target.innerText || target.textContent;
+                        target.setAttribute('data-original-text', text);
+                    }
+                    
+                    glitchDecodeText(target, text, 600);
+                    
+                    setTimeout(() => {
+                        target._isGlitching = false;
+                    }, 600);
+                }
+            });
+
             loadPersona("ai");
             initParticles();
             animate();
@@ -2285,5 +2703,16 @@
             }, 500);
         });
     </script>
+
+    <!-- Liquid morph filter definition -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <defs>
+            <filter id="liquid-morph">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="20" result="blur" />
+                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 40 -15" result="goo" />
+                <feBlend in="SourceGraphic" in2="goo" />
+            </filter>
+        </defs>
+    </svg>
 </body>
 </html>
